@@ -1,0 +1,91 @@
+version: 1
+
+before:
+  hooks:
+    - go mod tidy
+    - go generate ./...
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w -X main.Version={{.Version}} -X main.BuildTime={{.Date}} -X main.BuildUser=goreleaser
+
+archives:
+  - format: tar.gz
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    format_overrides:
+    - goos: windows
+      format: zip
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+
+release:
+  github:
+    owner: vek-servicos
+    name: bitbucket-runner
+
+dockers:
+  - image_templates:
+      - "ghcr.io/vek-servicos/bitbucket-runner:{{ .Tag }}-amd64"
+    dockerfile: Dockerfile
+    use: buildx
+    build_flag_templates:
+      - "--platform=linux/amd64"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+  - image_templates:
+      - "ghcr.io/vek-servicos/bitbucket-runner:{{ .Tag }}-arm64v8"
+    dockerfile: Dockerfile
+    use: buildx
+    build_flag_templates:
+      - "--platform=linux/arm64/v8"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+
+docker_manifests:
+  - name_template: "ghcr.io/vek-servicos/bitbucket-runner:{{ .Tag }}"
+    image_templates:
+      - "ghcr.io/vek-servicos/bitbucket-runner:{{ .Tag }}-amd64"
+      - "ghcr.io/vek-servicos/bitbucket-runner:{{ .Tag }}-arm64v8"
+  - name_template: "ghcr.io/vek-servicos/bitbucket-runner:latest"
+    image_templates:
+      - "ghcr.io/vek-servicos/bitbucket-runner:{{ .Tag }}-amd64"
+      - "ghcr.io/vek-servicos/bitbucket-runner:{{ .Tag }}-arm64v8"
+
+brews:
+  - name: bitbucket-runner
+    repository:
+      owner: vek-servicos
+      name: homebrew-tools
+    homepage: "https://github.com/vek-servicos/bitbucket-runner"
+    description: "CLI tool for running Bitbucket pipelines locally"
+    license: "MIT"
