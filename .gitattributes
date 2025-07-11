@@ -1,0 +1,114 @@
+# Common settings that generally should always be used with your language specific settings
+
+# Auto detect text files and perform LF normalization
+*          text=auto eol=lf
+
+#
+# The above will handle all files NOT found below
+#
+
+.gitattributes export-ignore
+.gitignore export-ignore
+.gitkeep   export-ignore
+*.7z       binary
+*.adoc     text
+*.bash     text eol=lf
+*.bat      text eol=crlf
+*.bibtex   text diff=bibtex
+*.cdxml    text eol=crlf
+*.class    binary
+*.cmd      text eol=crlf
+*.css      text diff=css
+*.csv      text
+*.dart     text
+*.df       text
+*.dll      binary
+*.doc      diff=astextplain
+*.DOC      diff=astextplain
+*.docx     diff=astextplain
+*.DOCX     diff=astextplain
+*.dot      diff=astextplain
+*.DOT      diff=astextplain
+*.ear      binary
+*.eps      binary
+*.epub     diff=astextplain
+*.fish     text eol=lf
+*.gif      binary
+*.gradle   text diff=java
+*.gradle.kts text diff=kotlin
+*.go       text diff=golang
+*.groovy   text diff=java
+*.gz       binary
+*.htm      text diff=html
+*.html     text diff=html
+*.ico      binary
+*.jar      binary
+*.java     text diff=java
+*.jks      binary
+*.jpeg     binary
+*.jpg      binary
+*.js       text
+*.json     text
+*.jsp      text
+*.jspf     text
+*.jspx     text
+*.kt       text diff=kotlin
+*.md       linguist-detectable
+*.md       text diff=markdown
+*.mdx      text diff=markdown
+*.mod      text
+*.mustache text
+*.otf      binary
+*.patch    -text
+*.pdf      diff=astextplain
+*.PDF      diff=astextplain
+*.png      binary
+*.properties text
+*.props    text eol=crlf
+*.props.tmpl text eol=crlf
+*.ps1      text eol=crlf
+*.ps1x     text eol=crlf
+*.ps1xml   text eol=crlf
+*.psd1     text eol=crlf
+*.psm1     text eol=crlf
+*.psrc     text eol=crlf
+*.pssc     text eol=crlf
+*.py       text
+*.rc       text eol=crlf
+*.rtf      diff=astextplain
+*.RTF      diff=astextplain
+*.sass     text
+*.scala    text diff=java
+*.scss     text diff=css
+*.sh       text eol=lf
+*.sum      text
+*.sln      text eol=crlf
+*.sln.tmpl text eol=crlf
+*.so       binary
+*.sql      text
+*.svg      text
+*.tab      text
+*.tag      text
+*.tagx     text
+*.tar      binary
+*.tex      text diff=tex
+*.textile  text
+*.tgz      binary
+*.tif      binary
+*.tiff     binary
+*.tld      text
+*.toml     text
+*.tsv      text
+*.ttf      binary
+*.txt      text
+*.vcxproj  text eol=crlf
+*.vcxproj.filters text eol=crlf
+*.vcxproj.tmpl text eol=crlf
+*.war      binary
+*.xml      text
+*.yaml     text
+*.yml      text
+*.zip      binary
+*.zsh      text eol=lf
+gradlew    text eol=lf
+mvnw       text eol=lf

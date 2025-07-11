@@ -1,58 +1,93 @@
-# Binaries for programs and plugins
-*.exe
-*.exe~
+# https://www.atlassian.com/git/tutorials/saving-changes/gitignore
+# https://www.toptal.com/developers/gitignore
+
+# Sorted Ignored
+.angular/
+.apt_generated
+.aws-ec2-user-data
+.classpath
+.claude/settings.local.json
+.directory
+.DS_Store
+.elasticbeanstalk/*
+.env
+.env*local
+.factorypath
+.idea/
+.mvn/wrapper/*
+.nb-gradle/
+.project
+.qodo
+.quarkus/
+.recommenders
+.sass-cache/
+.settings
+.springBeans
+.sts4-cache
+.svn/
+.tmp/*
+.vscode
+*.app
+*.avi
+*.b64
+*.bak
+*.class
+*.cover
 *.dll
-*.so
 *.dylib
+*.env
+*.err
+*.exe
+*.flv
+*.iml
+*.ipr
+*.iws
+*.jar
+*.log
+*.mov
+*.mp4
+*.out
+*.py[cod]
+*.releaseBackup
+*.so
+*.test
+*.tiff
+*.versionsBackup
+*.war
+*.wmv
+/.metadata/
+/*.env
+/*.var
+/**/.m2/application.properties
+/**/.m2/settings.xml
+/src/main/resources/certificates/*
 bin/
 bitbucket-runner
-bitbucket-runner-*
-
-# Test binary, built with `go test -c`
-*.test
-
-# Output of the go coverage tool
-*.out
-coverage.html
-
-# Go workspace file
-go.work
-
-# IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# Logs
-*.log
-logs/
-
-# Temporary files
-*.tmp
-*.temp
-
-# Build artifacts
-dist/
 build/
+coverage
+dist/
+effective-pom.xml
+effective-settings.xml
+go.work
+go.work.sum
+log-*.*
+nbbuild/
+nbdist/
+nbproject/private/
+node_modules/
+package-lock.json
+privateKey.pem
+publicKey.pem
+target/
+TEST*.xml
+Thumbs.db
+tmp/*
+vendor/
 
-# Docker
-.dockerignore
-
-# Environment files
-.env
-.env.local
-.env.*.local
-
-# Test artifacts
-testdata/output/
-*.pid
+# Sorted Exceptions
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+!.elasticbeanstalk/config.yml
+!.env.example
+!.env.template
+!.mvn/wrapper/maven-wrapper.properties
