@@ -1,0 +1,77 @@
+image: atlassian/default-image:5
+
+definitions:
+  services:
+    docker:
+      memory: 2048
+
+pipelines:
+  default:
+    - step:
+        name: Build and Test
+        image: atlassian/default-image:5
+        script:
+          - echo "Building application..."
+          - ./scripts/discord_send.sh pipeline-notify running "Build Started"
+          - echo "Running tests..."
+          - ./scripts/discord_send.sh pipeline-notify success "Build Completed"
+        after-script:
+          - ./scripts/discord_send.sh test-cloudflare
+
+  branches:
+    main:
+      - step:
+          name: Build Main
+          image: maven:3.8.6-openjdk-17-slim
+          script:
+            - echo "Building main branch..."
+            - ./scripts/discord_send.sh pipeline-notify running "Main Build"
+          after-script:
+            - ./scripts/discord_send.sh pipeline-notify success "Main Build Success"
+      
+      - step:
+          name: Deploy to Production
+          image: node:18-alpine
+          deployment: production
+          script:
+            - echo "Deploying to production..."
+            - ./scripts/discord_send.sh pipeline-notify running "Production Deploy"
+          after-script:
+            - ./scripts/discord_send.sh pipeline-notify success "Deploy Success"
+
+    develop:
+      - step:
+          name: Build Development
+          image: ubuntu:20.04
+          script:
+            - apt-get update && apt-get install -y curl
+            - echo "Building develop branch..."
+            - ./scripts/discord_send.sh pipeline-notify running "Dev Build"
+          after-script:
+            - ./scripts/discord_send.sh pipeline-notify success "Dev Build Success"
+
+  pull-requests:
+    '**':
+      - step:
+          name: PR Validation
+          image: python:3.11-slim
+          script:
+            - echo "Validating pull request..."
+            - ./scripts/discord_send.sh pipeline-notify running "PR Validation"
+          after-script:
+            - ./scripts/discord_send.sh pipeline-notify success "PR Validated"
+
+  custom:
+    test-discord:
+      - step:
+          name: Test Discord Integration
+          image: atlassian/default-image:5
+          script:
+            - ./scripts/test-runner.sh full-suite
+            
+    test-cloudflare:
+      - step:
+          name: Test Cloudflare Integration
+          image: ubuntu:20.04
+          script:
+            - ./scripts/discord_send.sh test-cloudflare

@@ -122,20 +122,56 @@ ensure_dependencies() {
     if [[ ${#missing_deps[@]} -gt 0 ]]; then
         log "WARN" "Dependências ausentes: ${missing_deps[*]}"
         
-        # Tentar instalar dependências baseado no sistema
-        if command_exists "apt-get"; then
-            log "INFO" "Instalando dependências via apt-get..."
-            apt-get update -qq && apt-get install -y "${missing_deps[@]}"
-        elif command_exists "yum"; then
-            log "INFO" "Instalando dependências via yum..."
-            yum install -y "${missing_deps[@]}"
-        elif command_exists "apk"; then
-            log "INFO" "Instalando dependências via apk..."
-            apk add --no-cache "${missing_deps[@]}"
+        # Verificar se tem privilégios de root ou sudo
+        if [[ $EUID -eq 0 ]]; then
+            log "INFO" "Executando como root, tentando instalar dependências..."
+            install_packages_as_root "${missing_deps[@]}"
+        elif command_exists "sudo" && sudo -n true 2>/dev/null; then
+            log "INFO" "Sudo disponível, tentando instalar dependências..."
+            install_packages_with_sudo "${missing_deps[@]}"
         else
-            log "ERROR" "Não foi possível instalar dependências automaticamente"
+            log "ERROR" "Dependências ausentes e sem privilégios para instalar: ${missing_deps[*]}"
+            log "ERROR" "Execute manualmente: apt-get install ${missing_deps[*]} (ou equivalente)"
             return 1
         fi
+    fi
+}
+
+# Função para instalar pacotes como root
+install_packages_as_root() {
+    local packages=("$@")
+    
+    if command_exists "apt-get"; then
+        log "INFO" "Instalando via apt-get: ${packages[*]}"
+        apt-get update -qq && apt-get install -y "${packages[@]}"
+    elif command_exists "yum"; then
+        log "INFO" "Instalando via yum: ${packages[*]}"
+        yum install -y "${packages[@]}"
+    elif command_exists "apk"; then
+        log "INFO" "Instalando via apk: ${packages[*]}"
+        apk add --no-cache "${packages[@]}"
+    else
+        log "ERROR" "Gerenciador de pacotes não encontrado"
+        return 1
+    fi
+}
+
+# Função para instalar pacotes com sudo
+install_packages_with_sudo() {
+    local packages=("$@")
+    
+    if command_exists "apt-get"; then
+        log "INFO" "Instalando via sudo apt-get: ${packages[*]}"
+        sudo apt-get update -qq && sudo apt-get install -y "${packages[@]}"
+    elif command_exists "yum"; then
+        log "INFO" "Instalando via sudo yum: ${packages[*]}"
+        sudo yum install -y "${packages[@]}"
+    elif command_exists "apk"; then
+        log "INFO" "Instalando via sudo apk: ${packages[*]}"
+        sudo apk add --no-cache "${packages[@]}"
+    else
+        log "ERROR" "Gerenciador de pacotes não encontrado"
+        return 1
     fi
 }
 
